@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-jstring c_string_to_java(JNIEnv* env, const char* str)
+jstring jniw_to_jstring(JNIEnv* env, const char* str)
 {
     int len = strlen(str);
     jbyte* nativeStr = (jbyte*)(str);
@@ -27,7 +27,7 @@ jstring c_string_to_java(JNIEnv* env, const char* str)
     return ret;
 }
 
-jobject c_enum_to_java(JNIEnv* env, const char* clazz)
+jobject jniw_to_enum(JNIEnv* env, const char* clazz)
 {
     const char* retStart = "()[";
     char* clazzName;
@@ -57,7 +57,7 @@ jobject c_enum_to_java(JNIEnv* env, const char* clazz)
     return (*env)->CallStaticObjectMethod(env, c, values);
 }
 
-void set_enum_field(JNIEnv* env,
+void jniw_set_enum_field(JNIEnv* env,
         jclass clazz,
         jobject obj,
         const char* field_name,
@@ -65,26 +65,26 @@ void set_enum_field(JNIEnv* env,
         jsize enum_value)
 {
     jfieldID field = (*env)->GetFieldID(env, clazz, field_name, enum_name);
-    jobjectArray objA = c_enum_to_java(env, enum_name);
+    jobjectArray objA = jniw_to_enum(env, enum_name);
     jobject o = (*env)->GetObjectArrayElement(env, objA, enum_value);
     (*env)->SetObjectField(env, obj, field, o);
     (*env)->DeleteLocalRef(env, o);
     (*env)->DeleteLocalRef(env, objA);
 }
 
-void set_int_field(JNIEnv* env, jclass clazz, jobject obj,
+void jniw_set_int_field(JNIEnv* env, jclass clazz, jobject obj,
         const char* field_name, jint value)
 {
     jfieldID field = (*env)->GetFieldID(env, clazz, field_name, "I");
     (*env)->SetIntField(env, obj, field, value);
 }
 
-void set_string_field(JNIEnv* env, jclass clazz, jobject obj,
+void jniw_set_string_field(JNIEnv* env, jclass clazz, jobject obj,
         const char* field_name, const char* value)
 {
     jfieldID field = (*env)->GetFieldID(env, clazz,
             field_name, "Ljava/lang/String;");
-    jstring s = c_string_to_java(env, value);
+    jstring s = jniw_to_jstring(env, value);
     (*env)->SetObjectField(env, obj, field, s);
     (*env)->DeleteLocalRef(env, s);
 }
