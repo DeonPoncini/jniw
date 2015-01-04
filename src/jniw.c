@@ -57,6 +57,23 @@ jobject jniw_to_enum(JNIEnv* env, const char* clazz)
     return (*env)->CallStaticObjectMethod(env, c, values);
 }
 
+jobject jniw_arraylist_create_r(JNIEnv* env, jsize reserve)
+{
+    jclass arrayListClass = (*env)->FindClass(env, "java/util/ArrayList");
+    jmethodID ctor = (*env)->GetMethodID(env, arrayListClass, "<init>",
+            "(I)V");
+    return (*env)->NewObject(env, arrayListClass, ctor, reserve);
+}
+
+void jniw_arraylist_add(JNIEnv* env, jobject arraylist, jobject to_add)
+{
+    jclass arrayListClass = (*env)->FindClass(env, "java/util/ArrayList");
+    jmethodID addMethod = (*env)->GetMethodID(env, arrayListClass, "add",
+            "(Ljava/lang/Object;)Z");
+    (*env)->CallBooleanMethod(env, arraylist, addMethod, to_add);
+    (*env)->DeleteLocalRef(env, to_add);
+}
+
 void jniw_set_enum_field(JNIEnv* env,
         jclass clazz,
         jobject obj,

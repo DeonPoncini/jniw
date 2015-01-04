@@ -16,6 +16,8 @@
 
 jstring jniw_to_jstring(JNIEnv* env, const char* str);
 jobject jniw_to_enum(JNIEnv* env, const char* clazz);
+jobject jniw_arraylist_create_r(JNIEnv* env, jsize reserve);
+void jniw_arraylist_add(JNIEnv* env, jobject arraylist, jobject to_add);
 
 void jniw_set_enum_field(JNIEnv* env, jclass clazz, jobject obj,
         const char* field_name, const char* enum_name, jsize enum_value);
