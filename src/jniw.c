@@ -24,6 +24,12 @@ jstring jniw_to_jstring(JNIEnv* env, const char* str)
     jstring ret = (jstring)((*env)->NewObject(env, stringClass,
                 ctor, bytes, charset));
 
+    (*env)->DeleteLocalRef(env, bytes);
+    (*env)->DeleteLocalRef(env, charsetClass);
+    (*env)->DeleteLocalRef(env, utf8);
+    (*env)->DeleteLocalRef(env, charset);
+    (*env)->DeleteLocalRef(env, stringClass);
+
     return ret;
 }
 
